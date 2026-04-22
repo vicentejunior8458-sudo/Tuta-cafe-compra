@@ -3,81 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TUTA CAFÉ - Nova Compra</title>
+    <title>TUTA CAFÉ - Registro Profissional</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <style>
-        :root { --cafe-escura: #3e2723; --cafe-media: #5d4037; --creme: #fff8e1; }
-        body { font-family: sans-serif; background-color: var(--creme); margin: 0; padding: 10px; }
-        .form-card { background: white; max-width: 480px; margin: auto; padding: 20px; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .painel-precos { background: #efebe9; padding: 10px; border-radius: 8px; margin-bottom: 15px; border-left: 5px solid var(--cafe-escura); }
-        .painel-precos p { margin: 5px 0; font-size: 13px; font-weight: bold; color: var(--cafe-escura); }
-        h1 { color: var(--cafe-escura); text-align: center; font-size: 22px; margin-bottom: 20px; }
-        fieldset { border: 1px solid #ddd; border-radius: 8px; padding: 12px; margin-bottom: 15px; }
-        legend { font-weight: bold; font-size: 12px; color: var(--cafe-media); }
-        label { display: block; margin: 8px 0 3px; font-weight: bold; font-size: 12px; }
-        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 15px; }
-        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        button { width: 100%; background: var(--cafe-escura); color: white; padding: 15px; border: none; border-radius: 8px; font-size: 16px; font-weight: bold; margin-top: 10px; }
-        #mensagemSucesso { display:none; background:#e8f5e9; color:#2e7d32; padding:15px; border-radius:8px; text-align:center; margin: 10px 0; font-weight:bold; }
+        :root { --primary: #3e2723; --accent: #8d6e63; --bg: #f5f5f5; --success: #2e7d32; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background: var(--bg); margin: 0; padding: 15px; color: #333; }
+        .container { max-width: 550px; margin: auto; background: white; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.1); overflow: hidden; }
+        .header { background: var(--primary); color: white; padding: 25px; text-align: center; }
+        .header h1 { margin: 0; font-size: 24px; letter-spacing: 2px; }
+        .header p { margin: 5px 0 0; opacity: 0.8; font-size: 14px; }
+        .price-bar { background: #efebe9; padding: 15px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; text-align: center; border-bottom: 2px solid #d7ccc8; }
+        .price-item span { display: block; font-size: 10px; font-weight: bold; color: var(--accent); text-transform: uppercase; }
+        .price-item strong { font-size: 13px; color: var(--primary); }
+        form { padding: 20px; }
+        .section-title { font-size: 12px; font-weight: bold; color: var(--accent); text-transform: uppercase; margin: 20px 0 10px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
+        .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        .input-group { margin-bottom: 15px; }
+        label { display: block; font-size: 12px; margin-bottom: 5px; font-weight: 600; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1.5px solid #ddd; border-radius: 8px; font-size: 16px; box-sizing: border-box; transition: 0.3s; }
+        input:focus { border-color: var(--primary); outline: none; background: #fffde7; }
+        button { width: 100%; background: var(--primary); color: white; border: none; padding: 18px; border-radius: 8px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 10px; transition: 0.3s; }
+        button:active { transform: scale(0.98); }
+        #msgSucesso { display:none; background: #e8f5e9; color: #2e7d32; padding: 15px; border-radius: 8px; text-align: center; margin-top: 15px; font-weight: bold; border: 1px solid #c8e6c9; }
     </style>
 </head>
 <body>
 
-<div class="form-card">
-    <h1>TUTA CAFÉ</h1>
-
-    <div class="painel-precos">
-        <p>📈 COTAÇÃO DO DIA (SACA):</p>
-        <p>• Novo (até 200 def): <span id="view_novo">Carregando...</span></p>
-        <p>• Velho (até 200 def): <span id="view_velho">Carregando...</span></p>
-        <p>• Até 300 def: <span id="view_300">Carregando...</span></p>
+<div class="container">
+    <div class="header">
+        <h1>TUTA CAFÉ</h1>
+        <p>RECEPÇÃO DE SAFRA E COMPRAS</p>
     </div>
-    
+
+    <div class="price-bar">
+        <div class="price-item"><span>Novo (200)</span><strong id="p1">---</strong></div>
+        <div class="price-item"><span>Velho (200)</span><strong id="p2">---</strong></div>
+        <div class="price-item"><span>Até 300</span><strong id="p3">---</strong></div>
+    </div>
+
     <form id="formCompra">
-        <fieldset>
-            <legend>PRODUTOR</legend>
-            <label>Nome</label><input type="text" id="nome" required>
-            <div class="grid">
-                <div><label>CPF/CNPJ</label><input type="text" id="cpf" inputmode="numeric" required></div>
-                <div><label>SEFAZ</label><input type="text" id="sefaz" required></div>
+        <div class="section-title">Informações do Produtor</div>
+        <div class="input-group">
+            <label>Nome Completo / Razão Social</label>
+            <input type="text" id="nome" required placeholder="Ex: João da Silva">
+        </div>
+        <div class="grid">
+            <div class="input-group">
+                <label>CPF / CNPJ</label>
+                <input type="text" id="cpf" inputmode="numeric" required placeholder="Apenas números">
             </div>
-        </fieldset>
+            <div class="input-group">
+                <label>Senha SEFAZ</label>
+                <input type="text" id="sefaz" required placeholder="Obrigatório">
+            </div>
+        </div>
 
-        <fieldset>
-            <legend>BANCO</legend>
-            <label>Banco</label>
+        <div class="section-title">Dados para Pagamento</div>
+        <div class="input-group">
+            <label>Instituição Bancária</label>
             <select id="banco">
-                <option value="Bradesco">Bradesco</option>
-                <option value="Sicoob">Sicoob</option>
-                <option value="Banco do Brasil">Banco do Brasil</option>
-                <option value="Caixa">Caixa</option>
-                <option value="Nubank">Nubank</option>
-                <option value="Sicredi">Sicredi</option>
+                <option value="756 - SICOOB">756 - SICOOB</option>
+                <option value="748 - SICREDI">748 - SICREDI</option>
+                <option value="001 - BANCO DO BRASIL">001 - BANCO DO BRASIL</option>
+                <option value="237 - BRADESCO">237 - BRADESCO</option>
+                <option value="104 - CAIXA ECONÔMICA">104 - CAIXA ECONÔMICA</option>
+                <option value="341 - ITAÚ">341 - ITAÚ</option>
+                <option value="033 - SANTANDER">033 - SANTANDER</option>
+                <option value="260 - NUBANK">260 - NUBANK</option>
+                <option value="077 - BANCO INTER">077 - BANCO INTER</option>
+                <option value="Outro">Outro (Informar em Obs)</option>
             </select>
-            <div class="grid">
-                <div><label>Agência</label><input type="text" id="agencia" inputmode="numeric" required></div>
-                <div><label>Conta</label><input type="text" id="conta" inputmode="numeric" required></div>
+        </div>
+        <div class="grid">
+            <div class="input-group">
+                <label>Agência</label>
+                <input type="text" id="agencia" inputmode="numeric" required>
             </div>
-        </fieldset>
+            <div class="input-group">
+                <label>Conta</label>
+                <input type="text" id="conta" inputmode="numeric" required>
+            </div>
+        </div>
 
-        <fieldset>
-            <legend>CAFÉ</legend>
-            <label>Tipo de Café</label>
+        <div class="section-title">Detalhes da Carga</div>
+        <div class="input-group">
+            <label>Classificação do Café</label>
             <select id="tipoCafe">
                 <option>Café Novo (até 200 def)</option>
                 <option>Café Velho (até 200 def)</option>
                 <option>Café (até 300 def)</option>
             </select>
-            <div class="grid">
-                <div><label>Quantidade</label><input type="number" id="qtd" step="0.1" required></div>
-                <div><label>Unidade</label><select id="unidade"><option>Sacas</option><option>Kg</option></select></div>
+        </div>
+        <div class="grid">
+            <div class="input-group">
+                <label>Qtd</label>
+                <input type="number" id="qtd" step="0.1" inputmode="decimal" required>
             </div>
-            <label>Armazém</label><input type="text" id="armazem" required>
-        </fieldset>
+            <div class="input-group">
+                <label>Unidade</label>
+                <select id="unidade"><option>Sacas</option><option>Kg</option></select>
+            </div>
+        </div>
+        <div class="input-group">
+            <label>Local de Retirada / Armazém</label>
+            <input type="text" id="armazem" required placeholder="Ex: Sítio Jatobá">
+        </div>
+        <div class="input-group">
+            <label>Observações</label>
+            <textarea id="observacao" rows="2" placeholder="Informações adicionais..."></textarea>
+        </div>
 
-        <div id="mensagemSucesso"></div>
-        <button type="submit" id="btn">REGISTRAR COMPRA</button>
+        <div id="msgSucesso"></div>
+        <button type="submit" id="btn">FINALIZAR REGISTRO</button>
     </form>
 </div>
 
@@ -91,25 +129,23 @@
         messagingSenderId: "483940361596",
         appId: "1:483940361596:web:4418541808c717276c70f9"
     };
-
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    // Ler Preços do ADM
-    database.ref('precos').on('value', (snap) => {
+    database.ref('precos').on('value', snap => {
         const p = snap.val();
-        if(p) {
-            document.getElementById('view_novo').innerText = "R$ " + p.novo200;
-            document.getElementById('view_velho').innerText = "R$ " + p.velho200;
-            document.getElementById('view_300').innerText = "R$ " + p.def300;
+        if(p){
+            document.getElementById('p1').innerText = "R$ " + p.novo200;
+            document.getElementById('p2').innerText = "R$ " + p.velho200;
+            document.getElementById('p3').innerText = "R$ " + p.def300;
         }
     });
 
     document.getElementById('formCompra').onsubmit = (e) => {
         e.preventDefault();
         const btn = document.getElementById('btn');
+        btn.innerText = "PROCESSANDO...";
         btn.disabled = true;
-        btn.innerText = "ENVIANDO...";
 
         const data = {
             nome: document.getElementById('nome').value,
@@ -119,20 +155,22 @@
             agencia: document.getElementById('agencia').value,
             conta: document.getElementById('conta').value,
             tipoCafe: document.getElementById('tipoCafe').value,
-            armazem: document.getElementById('armazem').value,
             qtd: document.getElementById('qtd').value,
             unidade: document.getElementById('unidade').value,
+            armazem: document.getElementById('armazem').value,
+            observacao: document.getElementById('observacao').value,
+            status: "PENDENTE",
             dataHr: new Date().toLocaleString('pt-BR')
         };
 
         database.ref('compras').push(data).then(() => {
             document.getElementById('formCompra').reset();
-            const msg = document.getElementById('mensagemSucesso');
+            const msg = document.getElementById('msgSucesso');
             msg.style.display = 'block';
-            msg.innerText = "✅ Sucesso! Registro concluído.";
+            msg.innerText = "REGISTRO ENVIADO COM SUCESSO!";
             btn.disabled = false;
-            btn.innerText = "REGISTRAR COMPRA";
-            setTimeout(() => msg.style.display = 'none', 5000);
+            btn.innerText = "FINALIZAR REGISTRO";
+            setTimeout(() => msg.style.display = 'none', 4000);
         });
     };
 </script>
