@@ -110,12 +110,29 @@
         };
 
         database.ref('compras').push(data).then(() => {
-            alert("✅ Compra de " + data.nome + " registrada!");
-            document.getElementById('formCompra').reset();
-            btn.innerText = "REGISTRAR COMPRA";
-            btn.disabled = false;
-        }).catch(err => { alert("Erro: " + err.message); btn.disabled = false; });
-    };
+            database.ref('compras').push(data).then(() => {
+    // Esconde o formulário ou limpa os dados
+    document.getElementById('formCompra').reset();
+    
+    // Mostra a mensagem personalizada na tela
+    const msg = document.getElementById('mensagemSucesso');
+    msg.style.display = 'block';
+    msg.innerText = "✅ Compra de " + data.nome + " registrada com sucesso!";
+
+    // Faz o botão voltar ao normal
+    btn.innerText = "REGISTRAR COMPRA";
+    btn.disabled = false;
+
+    // Esconde a mensagem automaticamente após 5 segundos
+    setTimeout(() => {
+        msg.style.display = 'none';
+    }, 5000);
+
+}).catch(err => { 
+    alert("Erro: " + err.message); 
+    btn.disabled = false; 
+});
+
 </script>
 </body>
 </html>
