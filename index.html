@@ -8,48 +8,45 @@
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #3e2723; --accent: #8d6e63; --bg: #f8f9fa; --success: #2e7d32; --pending: #c62828; }
+        :root { --primary: #3e2723; --accent: #8d6e63; --bg: #f8f9fa; --success: #2e7d32; }
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 0; color: #212529; }
         
-        .app-header { background: var(--primary); color: white; padding: 30px 20px; text-align: center; border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .app-header h1 { margin: 0; font-size: 26px; letter-spacing: 2px; font-weight: 700; }
+        .app-header { background: var(--primary); color: white; padding: 25px 20px; text-align: center; border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .app-header h1 { margin: 0; font-size: 24px; letter-spacing: 2px; }
         
         .container { max-width: 500px; margin: -20px auto 40px; padding: 0 15px; }
         
-        .price-panel { background: white; border-radius: 20px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
-        .price-card span { display: block; font-size: 10px; color: #888; font-weight: 700; text-transform: uppercase; }
-        .price-card strong { font-size: 14px; color: var(--primary); }
+        /* Painel de Cotações Atualizado */
+        .price-panel { background: white; border-radius: 20px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
+        .price-card span { display: block; font-size: 9px; color: #888; font-weight: 800; text-transform: uppercase; line-height: 1.2; margin-bottom: 5px;}
+        .price-card strong { font-size: 15px; color: var(--primary); }
 
         .glass-card { background: white; border-radius: 18px; padding: 20px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #eee; }
-        .section-tag { display: inline-block; background: #efebe9; color: var(--primary); font-size: 11px; font-weight: 800; padding: 5px 12px; border-radius: 20px; margin-bottom: 15px; }
+        .section-tag { display: inline-block; background: #efebe9; color: var(--primary); font-size: 10px; font-weight: 800; padding: 5px 12px; border-radius: 20px; margin-bottom: 15px; }
         
-        label { display: block; font-size: 12px; font-weight: 600; color: #555; margin-bottom: 5px; margin-left: 2px; }
-        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1.5px solid #eee; border-radius: 10px; font-size: 16px; box-sizing: border-box; background: #fcfcfc; transition: 0.3s; }
-        input:focus { border-color: var(--primary); outline: none; background: #fff; }
-
+        label { display: block; font-size: 12px; font-weight: 600; color: #555; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1.5px solid #eee; border-radius: 10px; font-size: 16px; box-sizing: border-box; background: #fcfcfc; }
+        
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-submit { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 15px; font-size: 16px; font-weight: 700; width: 100%; cursor: pointer; box-shadow: 0 10px 20px rgba(62, 39, 35, 0.2); }
 
-        .history-item { background: #fff; border-left: 5px solid var(--primary); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #eee; }
-        .status-badge { float: right; font-size: 10px; padding: 3px 8px; border-radius: 4px; color: white; font-weight: bold; }
-        .bg-pago { background: var(--success); }
-        .bg-pendente { background: var(--pending); }
-
+        .history-item { background: #fff; border-left: 5px solid var(--primary); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #eee; font-size: 13px; }
         #msgSucesso { display:none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: var(--success); color: white; padding: 15px 30px; border-radius: 50px; font-weight: bold; z-index: 1000; }
     </style>
 </head>
 <body>
 
-<div id="msgSucesso">✅ COMPRA REGISTRADA!</div>
+<div id="msgSucesso">✅ REGISTRO SALVO!</div>
 
 <header class="app-header">
     <h1>TUTA CAFÉ</h1>
-    <div id="statusLogin" style="display:none; font-size: 12px; margin-top: 10px; opacity: 0.8;">
-        CORRETOR: <span id="nomeExibicao" style="font-weight: 800;"></span>
+    <div id="statusLogin" style="display:none; font-size: 11px; margin-top: 8px; opacity: 0.8;">
+        OPERADOR: <span id="nomeExibicao" style="font-weight: 800;"></span>
     </div>
 </header>
 
 <div class="container">
+    
     <div id="loginArea" class="glass-card" style="text-align:center; margin-top: 40px;">
         <span class="section-tag">ACESSO RESTRITO</span>
         <input type="text" id="l_user" placeholder="Usuário">
@@ -58,15 +55,21 @@
     </div>
 
     <div id="mainArea" style="display:none; margin-top: 20px;">
+        
         <div class="price-panel">
-            <div class="price-card"><span>NOVO 200</span><strong id="v1">---</strong></div>
-            <div class="price-card"><span>VELHO 200</span><strong id="v2">---</strong></div>
-            <div class="price-card"><span>ATÉ 300</span><strong id="v3">---</strong></div>
+            <div class="price-card">
+                <span>CAFÉ 200/250 DEF.<br>(A RETIRAR)</span>
+                <strong id="v1">R$ 0,00</strong>
+            </div>
+            <div class="price-card">
+                <span>CAFÉ 200/250 DEF.<br>(POSTO ARMAZÉM)</span>
+                <strong id="v2">R$ 0,00</strong>
+            </div>
         </div>
 
         <form id="formCompra">
             <div class="glass-card">
-                <span class="section-tag">01. INFORMAÇÕES DO PRODUTOR</span>
+                <span class="section-tag">01. PRODUTOR</span>
                 <label>Nome Completo</label>
                 <input type="text" id="nome" required>
                 <div class="grid">
@@ -76,49 +79,56 @@
             </div>
 
             <div class="glass-card">
-                <span class="section-tag">02. DADOS PARA PAGAMENTO</span>
-                <label>Instituição Bancária</label>
-                <select id="banco">
-                    <option value="756 - SICOOB">756 - SICOOB</option>
-                    <option value="748 - SICREDI">748 - SICREDI</option>
-                    <option value="001 - BANCO DO BRASIL">001 - BANCO DO BRASIL</option>
-                    <option value="237 - BRADESCO">237 - BRADESCO</option>
-                    <option value="104 - CAIXA ECONÔMICA">104 - CAIXA ECONÔMICA</option>
-                    <option value="260 - NUBANK">260 - NUBANK</option>
-                </select>
+                <span class="section-tag">02. PAGAMENTO</span>
+                <label>Banco (Ex: Sicoob, Brasil, Nu...)</label>
+                <input type="text" id="banco" list="listaBancos" placeholder="Digite ou selecione o banco" required>
+                <datalist id="listaBancos">
+                    <option value="756 - SICOOB">
+                    <option value="748 - SICREDI">
+                    <option value="001 - BANCO DO BRASIL">
+                    <option value="237 - BRADESCO">
+                    <option value="104 - CAIXA ECONÔMICA">
+                    <option value="033 - SANTANDER">
+                    <option value="260 - NUBANK">
+                    <option value="077 - INTER">
+                    <option value="341 - ITAÚ">
+                </datalist>
                 <div class="grid">
-                    <div><label>Agência</label><input type="text" id="agencia" inputmode="numeric" required></div>
-                    <div><label>Conta</label><input type="text" id="conta" inputmode="numeric" required></div>
+                    <div><label>Agência</label><input type="text" id="agencia" required></div>
+                    <div><label>Conta</label><input type="text" id="conta" required></div>
                 </div>
             </div>
 
             <div class="glass-card">
-                <span class="section-tag">03. DETALHES DA CARGA</span>
-                <label>Classificação</label>
-                <select id="tipoCafe">
-                    <option>Café Novo (até 200 def)</option>
-                    <option>Café Velho (até 200 def)</option>
-                    <option>Café (até 300 def)</option>
-                </select>
-                <div class="grid">
-                    <div><label>Quantidade</label><input type="number" id="qtd" step="0.1" required></div>
-                    <div><label>Unidade</label><select id="unidade"><option>Sacas</option><option>Kg</option></select></div>
-                </div>
-                <label>Valor por Saca (R$)</label>
-                <input type="number" id="valorSaca" step="0.01" required placeholder="Ex: 1250.00">
+                <span class="section-tag">03. DETALHES DA COMPRA</span>
                 
-                <label>Armazém / Local de Retirada</label>
+                <label>Classificação do Café</label>
+                <select id="tipoCafe">
+                    <option>Café 200/250 defeitos</option>
+                    <option>Café fora de tipo</option>
+                </select>
+
+                <label>Quantidade da Carga</label>
+                <div class="grid">
+                    <div><input type="number" id="qtdSacas" placeholder="Sacas" required></div>
+                    <div><input type="number" id="qtdKg" placeholder="Quilos (Kg)"></div>
+                </div>
+
+                <label>Valor por Saca (R$)</label>
+                <input type="number" id="valorSaca" step="0.01" required>
+                
+                <label>Local de Retirada (Armazém)</label>
                 <input type="text" id="armazem" required>
-                <label>Observações</label>
-                <textarea id="obs" rows="2"></textarea>
+                
+                <label>Observações Adicionais</label>
+                <textarea id="obs" rows="2" placeholder="Ex: PIX, prazo, detalhes da carga..."></textarea>
             </div>
 
-            <button type="submit" id="btnSalvar" class="btn-submit">FINALIZAR REGISTRO</button>
+            <button type="submit" id="btnSalvar" class="btn-submit">FINALIZAR COMPRA</button>
         </form>
 
         <div class="glass-card">
-            <span class="section-tag">HISTÓRICO RECENTE</span>
-            <input type="text" id="inputBusca" placeholder="🔍 Buscar no histórico..." onkeyup="filtrarHistorico()" style="margin-bottom: 15px;">
+            <span class="section-tag">HISTÓRICO</span>
             <div id="listaHistorico"></div>
         </div>
 
@@ -127,6 +137,7 @@
 </div>
 
 <script>
+    // CONFIGURAÇÃO FIREBASE (MANTIDA)
     const firebaseConfig = {
         apiKey: "AIzaSyDE87l7QnjS48AT8jLOGLBDP2vwyGyHNEs",
         authDomain: "sistemacafe-e4a42.firebaseapp.com",
@@ -149,7 +160,7 @@
             if(snap.exists() && snap.val().senha === s) {
                 localStorage.setItem('tuta_user', u);
                 carregarPagina(u);
-            } else { alert("Acesso Negado!"); }
+            } else { alert("Login Inválido"); }
         });
     }
 
@@ -158,12 +169,13 @@
         document.getElementById('mainArea').style.display = 'block';
         document.getElementById('statusLogin').style.display = 'block';
         document.getElementById('nomeExibicao').innerText = nome.toUpperCase();
+        
+        // Carrega as 2 novas cotações
         database.ref('precos').on('value', snap => {
             const p = snap.val();
             if(p){
-                document.getElementById('v1').innerText = "R$ " + p.novo200;
-                document.getElementById('v2').innerText = "R$ " + p.velho200;
-                document.getElementById('v3').innerText = "R$ " + p.def300;
+                document.getElementById('v1').innerText = "R$ " + p.retirar;
+                document.getElementById('v2').innerText = "R$ " + p.armazem;
             }
         });
         carregarHistorico(nome);
@@ -175,17 +187,10 @@
             lista.innerHTML = "";
             let regs = [];
             snap.forEach(i => { if(i.val().corretor === corretor) regs.push(i.val()); });
-            regs.reverse().forEach(v => {
-                const badge = v.status === 'PAGO' ? 'bg-pago' : 'bg-pendente';
-                lista.innerHTML += `<div class="history-item"><span class="status-badge ${badge}">${v.status}</span><strong>${v.nome}</strong><br><small>${v.dataHr} | ${v.qtd} ${v.unidade}</small></div>`;
+            regs.reverse().slice(0, 5).forEach(v => {
+                lista.innerHTML += `<div class="history-item"><strong>${v.nome}</strong><br>${v.qtdSacas}sc e ${v.qtdKg || 0}kg - ${v.status}</div>`;
             });
         });
-    }
-
-    function filtrarHistorico() {
-        const termo = document.getElementById('inputBusca').value.toLowerCase();
-        const itens = document.getElementsByClassName('history-item');
-        Array.from(itens).forEach(i => { i.style.display = i.innerText.toLowerCase().includes(termo) ? 'block' : 'none'; });
     }
 
     function logout() { localStorage.removeItem('tuta_user'); location.reload(); }
@@ -204,8 +209,8 @@
             agencia: document.getElementById('agencia').value,
             conta: document.getElementById('conta').value,
             tipoCafe: document.getElementById('tipoCafe').value,
-            qtd: document.getElementById('qtd').value,
-            unidade: document.getElementById('unidade').value,
+            qtdSacas: document.getElementById('qtdSacas').value,
+            qtdKg: document.getElementById('qtdKg').value || 0,
             valorSaca: document.getElementById('valorSaca').value,
             armazem: document.getElementById('armazem').value,
             observacao: document.getElementById('obs').value,
