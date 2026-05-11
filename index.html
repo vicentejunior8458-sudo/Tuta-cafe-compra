@@ -3,68 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tuta Café | Operacional</title>
+    <title>Operacional | Tuta Café</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #3e2723; --bg: #f8f9fa; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 0; }
-        .app-header { background: var(--primary); color: white; padding: 20px; text-align: center; border-radius: 0 0 20px 20px; }
-        .container { max-width: 500px; margin: auto; padding: 15px; }
-        .glass-card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 15px; }
-        input, select { width: 100%; padding: 12px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .btn-submit { background: var(--primary); color: white; border: none; padding: 15px; border-radius: 10px; width: 100%; font-weight: bold; cursor: pointer; }
-        .history-item { background: #fff; border-left: 5px solid var(--primary); padding: 10px; margin-bottom: 8px; border-radius: 5px; font-size: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        :root { --primary: #3e2723; --bg: #f4f7f6; --white: #ffffff; }
+        body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 0; }
+        
+        .header { background: var(--primary); color: white; padding: 40px 20px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .header h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+
+        .container { max-width: 450px; margin: -30px auto 50px; padding: 0 15px; }
+        .card { background: var(--white); border-radius: 20px; padding: 25px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        
+        .price-tag { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; text-align: center; margin-bottom: 25px; }
+        .price-box { background: #efebe9; padding: 15px; border-radius: 15px; }
+        .price-box small { font-size: 10px; color: #8d6e63; font-weight: 700; text-transform: uppercase; }
+        .price-box strong { display: block; font-size: 16px; color: var(--primary); }
+
+        .section-title { font-size: 12px; font-weight: 700; color: #8d6e63; margin-bottom: 15px; border-left: 4px solid var(--primary); padding-left: 10px; text-transform: uppercase; }
+        
+        input { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #eee; border-radius: 12px; font-size: 15px; box-sizing: border-box; background: #f9f9f9; }
+        input:focus { border-color: var(--primary); outline: none; background: #fff; }
+
+        .btn-main { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 15px; width: 100%; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 5px 15px rgba(62,39,35,0.3); }
+        
+        .history-btn { background: #8d6e63; margin-top: 15px; padding: 12px; color: white; border-radius: 12px; width: 100%; border: none; font-size: 13px; font-weight: 600; cursor: pointer; }
+        .history-list { margin-top: 15px; display: none; }
+        .history-card { background: #fff; padding: 12px; border-radius: 12px; border: 1px solid #eee; margin-bottom: 10px; border-left: 5px solid var(--primary); font-size: 13px; }
     </style>
 </head>
 <body>
 
-<header class="app-header">
+<div class="header">
     <h1>TUTA CAFÉ</h1>
-    <div id="infoUser" style="display:none; font-size: 12px;">Olá, <span id="userNome"></span></div>
-</header>
+    <div id="userLabel" style="display:none; font-size: 11px; margin-top: 10px; opacity: 0.8;">OPERADOR: <span id="userName" style="font-weight:700"></span></div>
+</div>
 
 <div class="container">
-    <div id="loginArea" class="glass-card">
+    <div id="loginArea" class="card" style="margin-top: 50px; text-align: center;">
+        <h2 style="font-size: 16px; color: var(--primary);">ACESSO AO SISTEMA</h2>
         <input type="text" id="l_user" placeholder="Usuário">
         <input type="password" id="l_pass" placeholder="Senha">
-        <button class="btn-submit" onclick="fazerLogin()">ENTRAR</button>
+        <button class="btn-main" onclick="fazerLogin()">ENTRAR</button>
     </div>
 
     <div id="mainArea" style="display:none">
-        <div class="glass-card" style="display:grid; grid-template-columns: 1fr 1fr; text-align:center">
-            <div><small>A RETIRAR</small><br><strong id="v1">R$ 0,00</strong></div>
-            <div><small>ARMAZÉM</small><br><strong id="v2">R$ 0,00</strong></div>
+        <div class="price-tag card">
+            <div class="price-box">
+                <small>A Retirar</small>
+                <strong id="v1">R$ 0,00</strong>
+            </div>
+            <div class="price-box">
+                <small>Armazém</small>
+                <strong id="v2">R$ 0,00</strong>
+            </div>
         </div>
 
-        <form id="formCompra" class="glass-card">
-            <input type="text" id="nome" placeholder="Nome do Produtor" required>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+        <form id="formCompra" class="card">
+            <div class="section-title">Dados do Produtor</div>
+            <input type="text" id="nome" placeholder="Nome Completo" required>
+            <div style="display: flex; gap:10px">
                 <input type="text" id="cpf" placeholder="CPF/CNPJ">
                 <input type="text" id="sefaz" placeholder="Senha SEFAZ">
             </div>
-            <input type="text" id="banco" placeholder="Banco (Ex: Sicoob)">
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
+
+            <div class="section-title">Dados de Pagamento</div>
+            <input type="text" id="banco" placeholder="Banco (Ex: Sicoob, Brasil...)">
+            <div style="display: flex; gap:10px">
                 <input type="text" id="agencia" placeholder="Agência">
                 <input type="text" id="conta" placeholder="Conta">
             </div>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px">
-                <input type="number" id="qtdSacas" placeholder="Sacas" required>
-                <input type="number" id="qtdKg" placeholder="Kg">
+
+            <div class="section-title">Detalhes da Carga</div>
+            <div style="display: flex; gap:10px">
+                <input type="number" id="qtdSacas" placeholder="Qtd Sacas" required>
+                <input type="number" id="qtdKg" placeholder="Kg Adicional">
             </div>
-            <input type="text" id="valorSaca" oninput="mascaraMoeda(this)" placeholder="Valor p/ Saca (R$)" required>
-            <input type="text" id="armazem" placeholder="Local/Armazém" required>
-            <button type="submit" class="btn-submit">SALVAR COMPRA</button>
+            <input type="text" id="valorSaca" oninput="mascaraMoeda(this)" placeholder="Valor por Saca (R$)" required>
+            <input type="text" id="armazem" placeholder="Local de Entrega / Armazém" required>
+            
+            <button type="submit" class="btn-main">CONCLUIR REGISTRO</button>
         </form>
 
-        <button onclick="toggleHistorial()" class="btn-submit" style="background:#8d6e63; margin-bottom:15px">VER COMPRAS ANTERIORES</button>
-        <div id="listaHistorico" style="display:none"></div>
+        <button class="history-btn" onclick="toggleHistory()">VER COMPRAS RECENTES</button>
+        <div id="listaHistorico" class="history-list"></div>
     </div>
 </div>
 
 <script>
-    // Mesma configuração do Firebase do Admin
     const firebaseConfig = {
         apiKey: "AIzaSyDE87l7QnjS48AT8jLOGLBDP2vwyGyHNEs",
         authDomain: "sistemacafe-e4a42.firebaseapp.com",
@@ -92,19 +120,17 @@
         database.ref('usuarios/' + u).once('value', snap => {
             if(snap.exists() && snap.val().senha === s) {
                 localStorage.setItem('tuta_user', u);
-                location.reload();
-            } else { alert("Acesso negado!"); }
+                carregarInterface(u);
+            } else { alert("Acesso inválido!"); }
         });
     }
 
-    const logado = localStorage.getItem('tuta_user');
-    if(logado) {
+    function carregarInterface(user) {
         document.getElementById('loginArea').style.display = 'none';
         document.getElementById('mainArea').style.display = 'block';
-        document.getElementById('infoUser').style.display = 'block';
-        document.getElementById('userNome').innerText = logado.toUpperCase();
+        document.getElementById('userLabel').style.display = 'block';
+        document.getElementById('userName').innerText = user.toUpperCase();
 
-        // Carregar Preços
         database.ref('precos').on('value', snap => {
             const p = snap.val();
             if(p){
@@ -113,33 +139,34 @@
             }
         });
 
-        // Carregar Histórico
         database.ref('compras').on('value', snap => {
-            const lista = document.getElementById('listaHistorico');
-            lista.innerHTML = "";
+            const list = document.getElementById('listaHistorico');
+            list.innerHTML = "";
             snap.forEach(item => {
                 const v = item.val();
-                if(v.corretor === logado) {
-                    lista.innerHTML = `
-                        <div class="history-item">
-                            <strong>${v.nome}</strong> | ${v.qtdSacas || v.qtd} sacas<br>
-                            <small>${v.dataHr} - Status: ${v.status}</small>
-                        </div>` + lista.innerHTML;
+                if(v.corretor === user) {
+                    list.innerHTML = `<div class="history-card">
+                        <strong>${v.nome}</strong><br>
+                        ${v.qtdSacas || v.qtd} sacas | ${v.status} | ${v.dataHr}
+                    </div>` + list.innerHTML;
                 }
             });
         });
     }
 
-    function toggleHistorial() {
+    function toggleHistory() {
         const h = document.getElementById('listaHistorico');
         h.style.display = h.style.display === 'none' ? 'block' : 'none';
     }
 
+    const logado = localStorage.getItem('tuta_user');
+    if(logado) carregarInterface(logado);
+
     document.getElementById('formCompra').onsubmit = (e) => {
         e.preventDefault();
-        const vSaca = parseFloat(document.getElementById('valorSaca').value.replace("R$ ","").replace(".","").replace(",","."));
+        const vSaca = parseFloat(document.getElementById('valorSaca').value.replace(/\D/g,'')) / 100;
         const data = {
-            corretor: logado,
+            corretor: localStorage.getItem('tuta_user'),
             nome: document.getElementById('nome').value,
             cpf: document.getElementById('cpf').value,
             sefaz: document.getElementById('sefaz').value,
@@ -154,7 +181,7 @@
             dataHr: new Date().toLocaleString('pt-BR')
         };
         database.ref('compras').push(data).then(() => {
-            alert("Compra Registrada!");
+            alert("Compra registrada com sucesso!");
             document.getElementById('formCompra').reset();
         });
     };
