@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tuta Café | Broker App</title>
+    <title>Tuta Café | Operacional</title>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -12,11 +12,11 @@
         body { font-family: 'Inter', sans-serif; background: var(--bg); margin: 0; padding: 0; color: #212529; }
         
         .app-header { background: var(--primary); color: white; padding: 25px 20px; text-align: center; border-radius: 0 0 25px 25px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
-        .app-header h1 { margin: 0; font-size: 24px; letter-spacing: 2px; }
+        .app-header h1 { margin: 0; font-size: 24px; letter-spacing: 2px; font-weight: 700; }
         
         .container { max-width: 500px; margin: -20px auto 40px; padding: 0 15px; }
         
-        /* Painel de Cotações Atualizado */
+        /* Painel de Cotações */
         .price-panel { background: white; border-radius: 20px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; text-align: center; }
         .price-card span { display: block; font-size: 9px; color: #888; font-weight: 800; text-transform: uppercase; line-height: 1.2; margin-bottom: 5px;}
         .price-card strong { font-size: 15px; color: var(--primary); }
@@ -25,7 +25,8 @@
         .section-tag { display: inline-block; background: #efebe9; color: var(--primary); font-size: 10px; font-weight: 800; padding: 5px 12px; border-radius: 20px; margin-bottom: 15px; }
         
         label { display: block; font-size: 12px; font-weight: 600; color: #555; margin-bottom: 5px; }
-        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1.5px solid #eee; border-radius: 10px; font-size: 16px; box-sizing: border-box; background: #fcfcfc; }
+        input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1.5px solid #eee; border-radius: 10px; font-size: 16px; box-sizing: border-box; background: #fcfcfc; transition: 0.3s; }
+        input:focus { border-color: var(--primary); outline: none; background: #fff; }
         
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-submit { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 15px; font-size: 16px; font-weight: 700; width: 100%; cursor: pointer; box-shadow: 0 10px 20px rgba(62, 39, 35, 0.2); }
@@ -36,11 +37,11 @@
 </head>
 <body>
 
-<div id="msgSucesso">✅ REGISTRO SALVO!</div>
+<div id="msgSucesso">✅ COMPRA REGISTRADA!</div>
 
 <header class="app-header">
     <h1>TUTA CAFÉ</h1>
-    <div id="statusLogin" style="display:none; font-size: 11px; margin-top: 8px; opacity: 0.8;">
+    <div id="statusLogin" style="display:none; font-size: 11px; margin-top: 8px; opacity: 0.9;">
         OPERADOR: <span id="nomeExibicao" style="font-weight: 800;"></span>
     </div>
 </header>
@@ -51,7 +52,7 @@
         <span class="section-tag">ACESSO RESTRITO</span>
         <input type="text" id="l_user" placeholder="Usuário">
         <input type="password" id="l_pass" placeholder="Senha">
-        <button class="btn-submit" onclick="fazerLogin()">ENTRAR</button>
+        <button class="btn-submit" onclick="fazerLogin()">ENTRAR NO SISTEMA</button>
     </div>
 
     <div id="mainArea" style="display:none; margin-top: 20px;">
@@ -69,7 +70,7 @@
 
         <form id="formCompra">
             <div class="glass-card">
-                <span class="section-tag">01. PRODUTOR</span>
+                <span class="section-tag">01. DADOS DO PRODUTOR</span>
                 <label>Nome Completo</label>
                 <input type="text" id="nome" required>
                 <div class="grid">
@@ -79,19 +80,25 @@
             </div>
 
             <div class="glass-card">
-                <span class="section-tag">02. PAGAMENTO</span>
-                <label>Banco (Ex: Sicoob, Brasil, Nu...)</label>
-                <input type="text" id="banco" list="listaBancos" placeholder="Digite ou selecione o banco" required>
+                <span class="section-tag">02. DADOS BANCÁRIOS</span>
+                <label>Banco (Procure pelo nome ou código)</label>
+                <input type="text" id="banco" list="listaBancos" placeholder="Ex: 756 ou Sicoob" required>
                 <datalist id="listaBancos">
-                    <option value="756 - SICOOB">
-                    <option value="748 - SICREDI">
+                    <option value="756 - BANCO SICOOB">
+                    <option value="748 - BANCO SICREDI">
+                    <option value="133 - CRESOL">
                     <option value="001 - BANCO DO BRASIL">
                     <option value="237 - BRADESCO">
-                    <option value="104 - CAIXA ECONÔMICA">
+                    <option value="104 - CAIXA ECONÔMICA FEDERAL">
                     <option value="033 - SANTANDER">
-                    <option value="260 - NUBANK">
-                    <option value="077 - INTER">
                     <option value="341 - ITAÚ">
+                    <option value="260 - NUBANK">
+                    <option value="077 - BANCO INTER">
+                    <option value="336 - BANCO C6">
+                    <option value="290 - PAGBANK">
+                    <option value="323 - MERCADO PAGO">
+                    <option value="085 - VIACREDI">
+                    <option value="041 - BANRISUL">
                 </datalist>
                 <div class="grid">
                     <div><label>Agência</label><input type="text" id="agencia" required></div>
@@ -100,15 +107,15 @@
             </div>
 
             <div class="glass-card">
-                <span class="section-tag">03. DETALHES DA COMPRA</span>
+                <span class="section-tag">03. DETALHES DA CARGA</span>
                 
-                <label>Classificação do Café</label>
+                <label>Classificação</label>
                 <select id="tipoCafe">
                     <option>Café 200/250 defeitos</option>
                     <option>Café fora de tipo</option>
                 </select>
 
-                <label>Quantidade da Carga</label>
+                <label>Quantidade (Peso)</label>
                 <div class="grid">
                     <div><input type="number" id="qtdSacas" placeholder="Sacas" required></div>
                     <div><input type="number" id="qtdKg" placeholder="Quilos (Kg)"></div>
@@ -117,18 +124,18 @@
                 <label>Valor por Saca (R$)</label>
                 <input type="number" id="valorSaca" step="0.01" required>
                 
-                <label>Local de Retirada (Armazém)</label>
+                <label>Armazém / Local de Retirada</label>
                 <input type="text" id="armazem" required>
                 
-                <label>Observações Adicionais</label>
-                <textarea id="obs" rows="2" placeholder="Ex: PIX, prazo, detalhes da carga..."></textarea>
+                <label>Observações</label>
+                <textarea id="obs" rows="2" placeholder="Informações adicionais..."></textarea>
             </div>
 
-            <button type="submit" id="btnSalvar" class="btn-submit">FINALIZAR COMPRA</button>
+            <button type="submit" id="btnSalvar" class="btn-submit">REGISTRAR COMPRA</button>
         </form>
 
         <div class="glass-card">
-            <span class="section-tag">HISTÓRICO</span>
+            <span class="section-tag">ÚLTIMOS REGISTROS</span>
             <div id="listaHistorico"></div>
         </div>
 
@@ -137,7 +144,6 @@
 </div>
 
 <script>
-    // CONFIGURAÇÃO FIREBASE (MANTIDA)
     const firebaseConfig = {
         apiKey: "AIzaSyDE87l7QnjS48AT8jLOGLBDP2vwyGyHNEs",
         authDomain: "sistemacafe-e4a42.firebaseapp.com",
@@ -160,7 +166,7 @@
             if(snap.exists() && snap.val().senha === s) {
                 localStorage.setItem('tuta_user', u);
                 carregarPagina(u);
-            } else { alert("Login Inválido"); }
+            } else { alert("Usuário ou senha incorretos!"); }
         });
     }
 
@@ -170,12 +176,12 @@
         document.getElementById('statusLogin').style.display = 'block';
         document.getElementById('nomeExibicao').innerText = nome.toUpperCase();
         
-        // Carrega as 2 novas cotações
+        // Listener para as duas cotações
         database.ref('precos').on('value', snap => {
             const p = snap.val();
             if(p){
-                document.getElementById('v1').innerText = "R$ " + p.retirar;
-                document.getElementById('v2').innerText = "R$ " + p.armazem;
+                document.getElementById('v1').innerText = "R$ " + (p.retirar || "0,00");
+                document.getElementById('v2').innerText = "R$ " + (p.armazem || "0,00");
             }
         });
         carregarHistorico(nome);
@@ -188,7 +194,7 @@
             let regs = [];
             snap.forEach(i => { if(i.val().corretor === corretor) regs.push(i.val()); });
             regs.reverse().slice(0, 5).forEach(v => {
-                lista.innerHTML += `<div class="history-item"><strong>${v.nome}</strong><br>${v.qtdSacas}sc e ${v.qtdKg || 0}kg - ${v.status}</div>`;
+                lista.innerHTML += `<div class="history-item"><strong>${v.nome}</strong><br>${v.qtdSacas}sc e ${v.qtdKg || 0}kg | Status: ${v.status}</div>`;
             });
         });
     }
