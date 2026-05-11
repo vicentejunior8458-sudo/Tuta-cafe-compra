@@ -11,119 +11,111 @@
         :root { --primary: #3e2723; --secondary: #8d6e63; --bg: #f4f7f6; --white: #ffffff; }
         body { font-family: 'Poppins', sans-serif; background: var(--bg); margin: 0; padding: 0; color: #333; }
         
-        .header { background: var(--primary); color: white; padding: 35px 20px; text-align: center; border-radius: 0 0 30px 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .header h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: 1px; }
-
+        /* Header e Logout */
+        .header { background: var(--primary); color: white; padding: 35px 20px; text-align: center; border-radius: 0 0 30px 30px; position: relative; }
+        .logout-btn { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.2); border: none; color: white; padding: 5px 10px; border-radius: 8px; font-size: 10px; cursor: pointer; }
+        
         .container { max-width: 480px; margin: -30px auto 50px; padding: 0 15px; }
         
-        /* Painel de Preços */
-        .price-panel { background: var(--white); border-radius: 20px; padding: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        .price-box { background: #fdfaf9; border: 1px solid #efebe9; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; transition: 0.3s; }
-        .price-box:hover { background: #efebe9; }
-        .price-box small { font-size: 9px; color: var(--secondary); font-weight: 700; text-transform: uppercase; display: block; }
-        .price-box strong { font-size: 15px; color: var(--primary); }
-
-        /* Sessões do Formulário */
         .session-card { background: var(--white); border-radius: 20px; padding: 25px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); margin-bottom: 20px; border: 1px solid #eee; }
-        .session-header { display: flex; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
-        .session-number { background: var(--primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; margin-right: 10px; }
-        .session-title { font-size: 13px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.5px; }
+        .session-header { display: flex; align-items: center; margin-bottom: 15px; border-bottom: 1px solid #f0f0f0; padding-bottom: 10px; }
+        .session-number { background: var(--primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; margin-right: 10px; }
+        .session-title { font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; }
 
-        input, select { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #eee; border-radius: 12px; font-size: 15px; box-sizing: border-box; background: #f9f9f9; transition: 0.3s; font-family: inherit; }
-        input:focus { border-color: var(--secondary); outline: none; background: #fff; }
-
+        input, select { width: 100%; padding: 14px; margin-bottom: 12px; border: 1.5px solid #eee; border-radius: 12px; font-size: 15px; box-sizing: border-box; background: #f9f9f9; font-family: inherit; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
-        .btn-submit { background: var(--primary); color: white; border: none; padding: 20px; border-radius: 15px; width: 100%; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 5px 15px rgba(62,39,35,0.3); transition: 0.3s; }
-        .btn-submit:active { transform: scale(0.98); }
+        .btn-submit { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 15px; width: 100%; font-size: 16px; font-weight: 600; cursor: pointer; box-shadow: 0 5px 15px rgba(62,39,35,0.3); }
         
-        .history-section { margin-top: 30px; }
-        .history-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 6px solid var(--secondary); box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+        /* Modal de Histórico */
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); }
+        .modal-content { background: var(--bg); margin: 10% auto; padding: 20px; width: 90%; max-width: 450px; border-radius: 20px; max-height: 70vh; overflow-y: auto; }
+        .history-card { background: #fff; padding: 15px; border-radius: 15px; margin-bottom: 10px; border-left: 5px solid var(--secondary); font-size: 12px; }
+        
+        .history-trigger { background: var(--secondary); color: white; border: none; padding: 12px; border-radius: 12px; width: 100%; font-weight: 600; cursor: pointer; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-<div class="header">
-    <h1>TUTA CAFÉ | COMPRAS</h1>
-    <div id="userLabel" style="display:none; font-size: 11px; margin-top: 8px; opacity: 0.8;">LOGADO COMO: <span id="userName" style="font-weight:700"></span></div>
+<div id="loginArea" style="display:block">
+    <div class="header"><h1>TUTA CAFÉ</h1></div>
+    <div class="container">
+        <div class="session-card" style="margin-top: 50px; text-align: center;">
+            <h2 style="font-size: 16px; margin-bottom: 20px;">ACESSO DO CORRETOR</h2>
+            <input type="text" id="l_user" placeholder="Usuário">
+            <input type="password" id="l_pass" placeholder="Senha">
+            <button class="btn-submit" onclick="fazerLogin()">ENTRAR</button>
+        </div>
+    </div>
 </div>
 
-<div class="container">
-    <div id="loginArea" class="session-card" style="margin-top: 50px; text-align: center;">
-        <h2 style="font-size: 16px; margin-bottom: 20px;">ACESSO OPERACIONAL</h2>
-        <input type="text" id="l_user" placeholder="Usuário">
-        <input type="password" id="l_pass" placeholder="Senha">
-        <button class="btn-submit" onclick="fazerLogin()">ENTRAR NO SISTEMA</button>
+<div id="mainArea" style="display:none">
+    <div class="header">
+        <button class="logout-btn" onclick="logout()">SAIR / LOGOUT</button>
+        <h1>TUTA CAFÉ | COMPRAS</h1>
+        <div style="font-size: 11px; margin-top: 8px; opacity: 0.8;">CORRETOR: <span id="userName" style="font-weight:700"></span></div>
     </div>
 
-    <div id="mainArea" style="display:none">
-        <div class="price-panel">
-            <div class="price-box" onclick="aplicarPreco('retirar')">
-                <small>A Retirar (Hoje)</small>
-                <strong id="v1">R$ 0,00</strong>
-            </div>
-            <div class="price-box" onclick="aplicarPreco('armazem')">
-                <small>Posto Armazém</small>
-                <strong id="v2">R$ 0,00</strong>
-            </div>
-        </div>
-
+    <div class="container">
         <form id="formCompra">
             <div class="session-card">
                 <div class="session-header">
-                    <div class="session-number">1</div>
-                    <div class="session-title">Identificação do Produtor</div>
+                    <div class="session-number">1</div><div class="session-title">Produtor</div>
                 </div>
-                <input type="text" id="nome" placeholder="Nome Completo do Produtor" required>
+                <input type="text" id="nome" placeholder="Nome Completo" required>
                 <div class="grid">
-                    <input type="text" id="cpf" placeholder="CPF ou CNPJ">
+                    <input type="text" id="cpf" placeholder="CPF/CNPJ">
                     <input type="text" id="sefaz" placeholder="Senha SEFAZ">
                 </div>
             </div>
 
             <div class="session-card">
                 <div class="session-header">
-                    <div class="session-number">2</div>
-                    <div class="session-title">Dados Bancários para PGTO</div>
+                    <div class="session-number">2</div><div class="session-title">Pagamento</div>
                 </div>
-                <input type="text" id="banco" list="listaBancos" placeholder="Selecione o Banco">
-                <datalist id="listaBancos">
-                    <option value="SICOOB"> <option value="SICREDI"> <option value="CRESOL"> <option value="BANCO DO BRASIL"> <option value="BRADESCO">
-                </datalist>
+                <input type="text" id="banco" placeholder="Banco">
                 <div class="grid">
                     <input type="text" id="agencia" placeholder="Agência">
-                    <input type="text" id="conta" placeholder="Nº da Conta">
+                    <input type="text" id="conta" placeholder="Conta">
                 </div>
             </div>
 
             <div class="session-card">
                 <div class="session-header">
-                    <div class="session-number">3</div>
-                    <div class="session-title">Detalhes da Carga e Valor</div>
+                    <div class="session-number">3</div><div class="session-title">Carga e Valor</div>
                 </div>
                 <div class="grid">
                     <input type="number" id="qtdSacas" placeholder="Sacas" required>
                     <input type="number" id="qtdKg" placeholder="Kg Extras">
                 </div>
-                
-                <label style="font-size: 10px; font-weight: bold; color: var(--secondary);">VALOR POR SACA (R$)</label>
-                <input type="text" id="valorSaca" oninput="mascaraMoeda(this)" placeholder="R$ 0,00" required>
-                
-                <label style="font-size: 10px; font-weight: bold; color: var(--secondary);">LOCAL DE ENTREGA</label>
-                <select id="armazem" onchange="sugerirPrecoPorLocal()">
-                    <option value="">Selecione o Local...</option>
-                    <option value="A RETIRAR">A RETIRAR (NA FAZENDA)</option>
-                    <option value="POSTO ARMAZÉM">POSTO ARMAZÉM (ENTREGA)</option>
-                </select>
+
+                <div style="background: #fdfaf9; padding: 15px; border-radius: 15px; border: 1px solid #efebe9; margin-bottom: 15px;">
+                    <label style="font-size: 10px; font-weight: bold; color: var(--secondary); margin-bottom: 8px; display: block;">TIPO DE COTAÇÃO E VALOR</label>
+                    <select id="tipoCotacao" onchange="puxarPrecoAutomatico()" style="margin-bottom: 10px;">
+                        <option value="">Negociação Manual...</option>
+                        <option value="retirar">A Retirar (Cotação do Dia)</option>
+                        <option value="armazem">Posto Armazém (Cotação do Dia)</option>
+                    </select>
+                    <input type="text" id="valorSaca" oninput="mascaraMoeda(this)" placeholder="Valor por Saca (R$)" required>
+                </div>
+
+                <label style="font-size: 10px; font-weight: bold; color: var(--secondary);">LOCAL DE BUSCA (FAZENDA/PONTO)</label>
+                <input type="text" id="localBusca" placeholder="Ex: Fazenda Santa Maria, KM 12..." required>
             </div>
 
-            <button type="submit" class="btn-submit">FINALIZAR E SALVAR REGISTRO</button>
+            <button type="submit" class="btn-submit">SALVAR COMPRA</button>
+            <button type="button" class="history-trigger" onclick="abrirHistorico()">VER MINHAS COMPRAS</button>
         </form>
+    </div>
+</div>
 
-        <div class="history-section">
-            <h3 style="font-size: 14px; color: var(--primary);">MINHAS COMPRAS RECENTES</h3>
-            <div id="listaHistorico"></div>
+<div id="modalHist" class="modal">
+    <div class="modal-content">
+        <div style="display:flex; justify-content:space-between; margin-bottom:15px;">
+            <h3 style="margin:0; font-size:16px;">Meu Histórico</h3>
+            <button onclick="fecharHistorico()" style="background:none; border:none; font-weight:bold; cursor:pointer;">X FECHAR</button>
         </div>
+        <div id="listaHistorico"></div>
     </div>
 </div>
 
@@ -140,7 +132,7 @@
     firebase.initializeApp(firebaseConfig);
     const database = firebase.database();
 
-    let precosAtuais = { retirar: 0, armazem: 0 };
+    let precosDB = { retirar: 0, armazem: 0 };
 
     function mascaraMoeda(i) {
         let v = i.value.replace(/\D/g,'');
@@ -151,32 +143,13 @@
         i.value = v !== "0,00" ? "R$ " + v : "";
     }
 
-    function formatarParaMoeda(v) {
-        return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-    }
+    function formatarMoeda(v) { return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); }
 
-    // Puxa o preço conforme o local selecionado
-    function sugerirPrecoPorLocal() {
-        const local = document.getElementById('armazem').value;
+    function puxarPrecoAutomatico() {
+        const tipo = document.getElementById('tipoCotacao').value;
         const campoValor = document.getElementById('valorSaca');
-        
-        if (local === "A RETIRAR") {
-            campoValor.value = formatarParaMoeda(precosAtuais.retirar);
-        } else if (local === "POSTO ARMAZÉM") {
-            campoValor.value = formatarParaMoeda(precosAtuais.armazem);
-        }
-    }
-
-    function aplicarPreco(tipo) {
-        const campoValor = document.getElementById('valorSaca');
-        const campoLocal = document.getElementById('armazem');
-        if(tipo === 'retirar') {
-            campoValor.value = formatarParaMoeda(precosAtuais.retirar);
-            campoLocal.value = "A RETIRAR";
-        } else {
-            campoValor.value = formatarParaMoeda(precosAtuais.armazem);
-            campoLocal.value = "POSTO ARMAZÉM";
-        }
+        if(tipo === 'retirar') campoValor.value = formatarMoeda(precosDB.retirar);
+        if(tipo === 'armazem') campoValor.value = formatarMoeda(precosDB.armazem);
     }
 
     function fazerLogin() {
@@ -186,25 +159,19 @@
             if(snap.exists() && snap.val().senha === s) {
                 localStorage.setItem('tuta_user', u);
                 location.reload();
-            } else { alert("Usuário ou Senha incorretos!"); }
+            } else { alert("Acesso inválido!"); }
         });
     }
+
+    function logout() { localStorage.removeItem('tuta_user'); location.reload(); }
 
     const logado = localStorage.getItem('tuta_user');
     if(logado) {
         document.getElementById('loginArea').style.display = 'none';
         document.getElementById('mainArea').style.display = 'block';
-        document.getElementById('userLabel').style.display = 'block';
         document.getElementById('userName').innerText = logado.toUpperCase();
 
-        database.ref('precos').on('value', snap => {
-            const p = snap.val();
-            if(p){
-                precosAtuais = p;
-                document.getElementById('v1').innerText = formatarParaMoeda(p.retirar);
-                document.getElementById('v2').innerText = formatarParaMoeda(p.armazem);
-            }
-        });
+        database.ref('precos').on('value', snap => { if(snap.val()) precosDB = snap.val(); });
 
         database.ref('compras').on('value', snap => {
             const list = document.getElementById('listaHistorico');
@@ -213,14 +180,16 @@
                 const v = item.val();
                 if(v.corretor === logado) {
                     list.innerHTML = `<div class="history-card">
-                        <strong>${v.nome}</strong><br>
-                        ${v.qtdSacas || v.qtd} sc | ${formatarParaMoeda(v.valorSaca || 0)}<br>
-                        <small>${v.dataHr} - Status: ${v.status}</small>
+                        <strong>${v.nome}</strong><br>${v.qtdSacas} sacas - ${formatarMoeda(v.valorSaca || 0)}<br>
+                        <small>${v.dataHr} | ${v.status}</small>
                     </div>` + list.innerHTML;
                 }
             });
         });
     }
+
+    function abrirHistorico() { document.getElementById('modalHist').style.display = 'block'; }
+    function fecharHistorico() { document.getElementById('modalHist').style.display = 'none'; }
 
     document.getElementById('formCompra').onsubmit = (e) => {
         e.preventDefault();
@@ -236,12 +205,12 @@
             qtdSacas: document.getElementById('qtdSacas').value,
             qtdKg: document.getElementById('qtdKg').value || 0,
             valorSaca: vSaca,
-            armazem: document.getElementById('armazem').value,
+            armazem: document.getElementById('localBusca').value,
             status: "PENDENTE",
             dataHr: new Date().toLocaleString('pt-BR')
         };
         database.ref('compras').push(data).then(() => {
-            alert("Venda registrada com sucesso!");
+            alert("Compra salva!");
             document.getElementById('formCompra').reset();
         });
     };
