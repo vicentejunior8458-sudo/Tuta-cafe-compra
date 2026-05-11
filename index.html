@@ -20,10 +20,10 @@
         input, select, textarea { width: 100%; padding: 12px; margin-bottom: 12px; border: 1.5px solid #eee; border-radius: 10px; font-size: 16px; box-sizing: border-box; background: #fcfcfc; }
         .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-submit { background: var(--primary); color: white; border: none; padding: 18px; border-radius: 15px; font-size: 16px; font-weight: 700; width: 100%; cursor: pointer; }
+        .history-item { background: #fff; border-left: 5px solid var(--primary); padding: 12px; border-radius: 10px; margin-bottom: 10px; border: 1px solid #eee; font-size: 13px; }
     </style>
 </head>
 <body>
-
 <header class="app-header">
     <h1>TUTA CAFÉ</h1>
     <div id="statusLogin" style="display:none; font-size: 11px; margin-top: 8px;">OPERADOR: <span id="nomeExibicao" style="font-weight:800"></span></div>
@@ -77,6 +77,9 @@
             </div>
             <button type="submit" class="btn-submit">REGISTRAR COMPRA</button>
         </form>
+
+        <h3 style="margin-top:30px; font-size: 14px;">MINHAS ÚLTIMAS COMPRAS:</h3>
+        <div id="listaHistorico"></div>
     </div>
 </div>
 
@@ -102,16 +105,13 @@
         i.value = v !== "0.00" ? "R$ " + v : "";
     }
 
-    function formatarMoeda(valor) {
-        return parseFloat(valor || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    function formatarMoeda(v) {
+        return parseFloat(v || 0).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     }
 
-    function limparValor(valor) {
-        return parseFloat(valor.replace("R$ ", "").replace(/\./g, "").replace(",", "."));
+    function limparValor(v) {
+        return parseFloat(v.replace("R$ ", "").replace(/\./g, "").replace(",", "."));
     }
-
-    let user = localStorage.getItem('tuta_user');
-    if(user) carregarPagina(user);
 
     function fazerLogin() {
         const u = document.getElementById('l_user').value.toLowerCase().trim();
@@ -129,6 +129,7 @@
         document.getElementById('mainArea').style.display = 'block';
         document.getElementById('statusLogin').style.display = 'block';
         document.getElementById('nomeExibicao').innerText = nome.toUpperCase();
+        
         database.ref('precos').on('value', snap => {
             const p = snap.val();
             if(p){
@@ -136,7 +137,23 @@
                 document.getElementById('v2').innerText = formatarMoeda(p.armazem);
             }
         });
+
+        database.ref('compras').on('value', snap => {
+            const lista = document.getElementById('listaHistorico');
+            lista.innerHTML = "";
+            snap.forEach(item => {
+                const v = item.val();
+                if(v.corretor === nome) {
+                    lista.innerHTML = `<div class="history-item">
+                        <strong>${v.nome}</strong><br>
+                        ${v.qtdSacas} sacas - ${v.status} em ${v.dataHr}
+                    </div>` + lista.innerHTML;
+                }
+            });
+        });
     }
+
+    if(localStorage.getItem('tuta_user')) carregarPagina(localStorage.getItem('tuta_user'));
 
     document.getElementById('formCompra').onsubmit = (e) => {
         e.preventDefault();
@@ -157,7 +174,7 @@
             dataHr: new Date().toLocaleString('pt-BR')
         };
         database.ref('compras').push(data).then(() => {
-            alert("Registro Salvo!");
+            alert("Sucesso!");
             document.getElementById('formCompra').reset();
         });
     };
